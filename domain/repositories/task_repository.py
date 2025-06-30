@@ -33,5 +33,5 @@ class TaskRepository(ABC):
     
     
     @abstractmethod
-    def delete_task(self, task_id: UUID) -> bool:
+    def delete_task(self, task_id: UUID, user_id:UUID) -> bool:
         pass

@@ -38,9 +38,11 @@ class Task(models.Model):
     title = models.CharField(max_length=255)
     description = models.TextField(blank=True)
     is_deleted = models.BooleanField(default=False)
-    deadline = models.DateField(blank=True, null=True)
+    deadline = models.DateTimeField(blank=True, null=True)
     
     is_completed = models.BooleanField(default=False)
+    created_at = models.DateTimeField(auto_now_add=True)
+    last_updated = models.DateTimeField(auto_now=True)
     
     @property
     def progress(self):
@@ -63,6 +65,9 @@ class Subtask(models.Model):
     description = models.TextField(blank=True)
     is_deleted = models.BooleanField(default=False)
     is_completed = models.BooleanField(default=False)
+    
+    created_at = models.DateTimeField(auto_now_add=True)
+    last_updated = models.DateTimeField(auto_now=True)
     
     
     def __str__(self):

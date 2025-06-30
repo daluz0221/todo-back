@@ -1,42 +1,37 @@
 from rest_framework import serializers
-from apps.tasks.models import Task
+from uuid import UUID, uuid4
+from datetime import datetime
+
+from domain.entities.task import Task
 
 from .subtask_serializers import SubtaskSerializer
 from .category_serializer import NestedCategorySerializer
 
-class TaskSerializer(serializers.ModelSerializer):
-    progress = serializers.FloatField(read_only=True)  # usa el @property
-
-    class Meta:
-        model = Task
-        fields = [
-            'id',
-            'category',
-            'title',
-            'description',
-            'is_completed',
-            'deadline',
-            'progress',
-        ]
-        read_only_fields = ['id', 'progress']
+class TaskCreateSerializer(serializers.Serializer):
+    title = serializers.CharField(max_length=255)
+    description = serializers.CharField()
+    is_completed = serializers.BooleanField(default=False)
+    is_deleted = serializers.BooleanField(default=False)
+    deadline = serializers.DateTimeField()
+    category_id = serializers.UUIDField()
 
 
-class TaskDetailSerializer(serializers.ModelSerializer):
-    progress = serializers.FloatField(read_only=True)
-    subtasks = SubtaskSerializer(many=True, read_only=True)
-    category = NestedCategorySerializer(read_only=True)
 
-    class Meta:
-        model = Task
-        fields = [
-            'id',
-            'category',
-            'title',
-            'description',
-            'is_completed',
-            'deadline',
-            'progress',
-            'subtasks',
-            'category'
-        ]
-        read_only_fields = ['id', 'progress', 'subtasks', 'category']
+class TaskUpdateSerializer(serializers.Serializer):
+    title = serializers.CharField(max_length=255, required=False)
+    description = serializers.CharField(required=False)
+    is_completed = serializers.BooleanField(required=False)
+    deadline = serializers.DateTimeField(required=False)
+    category_id = serializers.UUIDField(required=False)
+    
+
+class TaskReadSerializer(serializers.Serializer):
+    id = serializers.UUIDField()
+    title = serializers.CharField()
+    description = serializers.CharField()
+    is_completed = serializers.BooleanField()
+    is_deleted = serializers.BooleanField()
+    deadline = serializers.DateTimeField()
+    category_id = serializers.UUIDField()
+    
+    

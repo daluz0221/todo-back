@@ -10,7 +10,7 @@ def orm_to_entity(task_orm: TaskORM) -> Task:
         is_completed=task_orm.is_completed,
         is_deleted=task_orm.is_deleted,
         deadline=task_orm.deadline,
-        category_id=task_orm.category,
+        category_id=task_orm.category_id,
         user_id=task_orm.user
     )
     
