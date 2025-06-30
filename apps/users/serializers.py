@@ -14,7 +14,6 @@ class UserRegisterSerializer(ModelSerializer):
     class Meta:
         model = User
         fields =[
-            'id',
             'email',
             'username',
             'first_name',
@@ -38,7 +37,7 @@ class UserLoginSerializer(Serializer):
 
     def validate(self, data):
         user = authenticate(email=data['email'], password=data['password'])
-        print(f"AUTENTICATE RETURNED: {user}")
+   
         if not user:
             raise ValidationError("Credenciales inválidas.")
         if not user.is_active:

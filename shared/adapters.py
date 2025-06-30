@@ -1,10 +1,6 @@
 from rest_framework_simplejwt.tokens import RefreshToken
 
 
-
-
-
-
 def return_refresh_token(user):
 
     refresh = RefreshToken.for_user( user )
