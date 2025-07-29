@@ -13,7 +13,7 @@ class CategoryRepository(ABC):
     
     
     @abstractmethod
-    def get_by_id(self, category_id: UUID) -> Category:
+    def get_by_id(self, category_id: UUID, user_id: UUID) -> Category:
         pass
     
     

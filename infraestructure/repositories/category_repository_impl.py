@@ -1,23 +1,34 @@
 
+from django.db.models import Prefetch
+
 
 from domain.entities.category import Category
 from domain.repositories.category_repository import CategoryRepository
 
 from apps.tasks.models import Category as CategoryORM
+from apps.tasks.models import Task as TaskORM
 
-from infraestructure.mappers.category_mapper import orm_to_entity, entity_to_orm
+from infraestructure.mappers.category_mapper import orm_to_entity, entity_to_orm, category_with_tasks_orm_to_dto
 
-from django.core.exceptions import ObjectDoesNotExist
 
 
 class DjangoCategoryRepository(CategoryRepository):
     
     
-    def get_by_id(self, category_id):
+    def get_by_id(self, category_id, user_id):
         
         try:
-            category = CategoryORM.objects.get(id=category_id)
-            return orm_to_entity(category)
+            # category = CategoryORM.objects.get(id=category_id, user_id=user_id)
+            category = CategoryORM.objects.prefetch_related(
+                Prefetch(
+                    'tasks',
+                    queryset=TaskORM.objects.filter(category_id=category_id, user_id=user_id, is_deleted=False),
+                    to_attr="category_tasks"
+                )
+            ).get(id=category_id, user_id=user_id)
+            
+            return category_with_tasks_orm_to_dto(category)
+
         except:
             raise ValueError("Category not found")
         

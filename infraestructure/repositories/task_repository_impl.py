@@ -1,11 +1,11 @@
-
+from django.db.models import Prefetch
 
 from domain.entities.task import Task
 from domain.repositories.task_repository import TaskRepository
 
-from apps.tasks.models import Task as TaskORM
+from apps.tasks.models import Task as TaskORM, Subtask as SubtasORM
 
-from infraestructure.mappers.task_mapper import orm_to_entity, entity_to_orm
+from infraestructure.mappers.task_mapper import orm_to_entity, entity_to_orm, task_with_subtasks_orm_to_dto
 
 
 
@@ -13,11 +13,18 @@ from infraestructure.mappers.task_mapper import orm_to_entity, entity_to_orm
 class DjangoTaskRepository(TaskRepository):
     
     
-    def get_by_id(self, task_id):
+    def get_by_id(self, task_id, user_id):
         
         try:
-            task = TaskORM.objects.get(id=task_id)
-            return orm_to_entity(task)
+       
+            task = TaskORM.objects.prefetch_related(
+                Prefetch(
+                    'subtasks',
+                    queryset=SubtasORM.objects.filter(task_id=task_id, user_id=user_id, is_deleted=False),
+                    to_attr='task_subtasks'
+                )
+            ).get(id=task_id, user_id=user_id)
+            return task_with_subtasks_orm_to_dto(task)
         except:
             raise ValueError("Task not found")
         
@@ -54,6 +61,8 @@ class DjangoTaskRepository(TaskRepository):
             task_orm = TaskORM.objects.get(id=task.id, category_id=task.category_id)
             task_orm.title = task.title
             task_orm.description = task.description
+            task_orm.difficulties = task.dificulties
+            task_orm.solution = task.solution
             task_orm.deadline = task.deadline
             task_orm.is_completed = task.is_completed
             task_orm.save()

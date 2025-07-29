@@ -3,9 +3,9 @@ from rest_framework.response import Response
 from rest_framework import status
 from infraestructure.repositories.category_repository_impl import DjangoCategoryRepository
 from apps.tasks.models import Category
-from use_cases import CreateCategoryUseCase, ListAllCategoriesUseCase, UpdateCategoryUseCase, DeleteCategoryUseCase
+from use_cases import CreateCategoryUseCase, ListAllCategoriesUseCase, UpdateCategoryUseCase, DeleteCategoryUseCase, GetCategoryUseCase
 
-from ..serializers.category_serializer import CategoryDDESerializer, CategoryUpdateSerializer, CreateCategory
+from ..serializers.category_serializer import CategoryDDESerializer, CategoryUpdateSerializer, CreateCategory, CategoryWithTasksDTOSerializer
 
 
 category_repo = DjangoCategoryRepository()
@@ -40,8 +40,7 @@ class CategoryCreateView(APIView):
             
         return Response({
             "message": "Falló la creación de la categoría"
-        }, status=status.HTTP_400_BAD_REQUEST)
-        
+        }, status=status.HTTP_400_BAD_REQUEST)    
         
         
 class ListCategoriesApiView(APIView):
@@ -65,6 +64,25 @@ class ListCategoriesApiView(APIView):
         return Response([], status=status.HTTP_200_OK)
     
     
+class GetCategoryApiView(APIView):
+    
+    
+    def get(self, request, category_id):
+        user_id = request.user.id
+        
+        use_case = GetCategoryUseCase(category_repo)
+        
+        category = use_case.execute(category_id, user_id)
+        
+        if category:
+            serializer = CategoryWithTasksDTOSerializer(category)
+            return Response(
+                serializer.data, 
+                status=status.HTTP_200_OK
+            )
+            
+        return Response({"message": "Falló la obtención de la información relacionada a la categoría"}, status=status.HTTP_400_BAD_REQUEST)
+
 class UpdteCategoryApiView(APIView):
     
     def put(self, request, category_id):

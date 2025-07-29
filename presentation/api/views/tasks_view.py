@@ -3,8 +3,8 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from apps.tasks.models import Task
 from infraestructure.repositories.task_repository_impl import DjangoTaskRepository
-from use_cases import CreateTaskUseCase, ListAllTasksUseCase, UpdateTaskUseCase, DeleteTaskUseCase
-from ..serializers import TaskCreateSerializer, TaskReadSerializer, TaskUpdateSerializer
+from use_cases import CreateTaskUseCase, ListAllTasksUseCase, UpdateTaskUseCase, DeleteTaskUseCase, GetTaskUseCase
+from ..serializers import TaskCreateSerializer, TaskReadSerializer, TaskUpdateSerializer, TaskWithSubTasksDTOSerializer
 
 
 
@@ -66,7 +66,24 @@ class ListTasksApiView(APIView):
             
         return Response([], status=status.HTTP_200_OK)
         
+   
+class GetTaskApiView(APIView):
+    
+    def get(self, request, task_id):
+        user_id = request.user.id
         
+        use_case = GetTaskUseCase(task_repo)
+        
+        task = use_case.execute(task_id, user_id)
+        
+        if task:
+            serializer = TaskWithSubTasksDTOSerializer(task)
+            return Response(
+                serializer.data,
+                status=status.HTTP_200_OK
+            )
+        
+        return Response({"message": "Falló la obtención de la información relacionada a la tarea"}, status=status.HTTP_400_BAD_REQUEST)
 
 class UpdateTaskApiView(APIView):
     
@@ -76,6 +93,9 @@ class UpdateTaskApiView(APIView):
         
         serializer = TaskUpdateSerializer(data=request.data)
         if not serializer.is_valid():
+            print("============================")
+            print("llego")
+            print("============================")
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         
         
@@ -86,6 +106,8 @@ class UpdateTaskApiView(APIView):
             task_id=task_id,
             title=validated.get("title"),
             description=validated.get("description"),
+            dificulties=validated.get("dificulties"),
+            solution=validated.get("solution"),
             is_completed=validated.get("is_completed"),
             deadline=validated.get("deadline"),
             category_id=validated.get("category_id"),

@@ -4,10 +4,14 @@ from uuid import UUID, uuid4
 @dataclass
 class Subtask:
     title: str
+    description: str
     is_completed: bool
+    dificulties: str
+    solution: str
     is_deleted: bool
     id: UUID = field(default_factory=uuid4)
     task_id: UUID = field(default_factory=uuid4)
+    user_id: UUID = field(default_factory=uuid4)
     
     
     def __post_init__(self):

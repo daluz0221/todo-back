@@ -8,10 +8,13 @@ class Task:
     description: str
     is_completed: bool
     is_deleted: bool
+    dificulties: str
+    solution: str
     deadline: datetime
     id: UUID = field(default_factory=uuid4)
     category_id: UUID = field(default_factory=uuid4)
     user_id: UUID = field(default_factory=uuid4)
+    progress: float = 0.0
 
     def __post_init__(self):
         if not isinstance(self.id, UUID):

@@ -37,6 +37,8 @@ class Task(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='user_tasks')
     title = models.CharField(max_length=255)
     description = models.TextField(blank=True)
+    difficulties = models.TextField(blank=True, null=True)
+    solution = models.TextField(blank=True, null=True)
     is_deleted = models.BooleanField(default=False)
     deadline = models.DateTimeField(blank=True, null=True)
     
@@ -63,6 +65,8 @@ class Subtask(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='user_subtasks')
     title = models.CharField(max_length=255)
     description = models.TextField(blank=True)
+    difficulties = models.TextField(blank=True, null=True)
+    solution = models.TextField(blank=True, null=True)
     is_deleted = models.BooleanField(default=False)
     is_completed = models.BooleanField(default=False)
     

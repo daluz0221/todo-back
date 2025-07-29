@@ -10,11 +10,13 @@ class UpdateTaskUseCase:
         self.task_repo = task_repo
         
         
-    def execute(self, task_id: UUID, title:str, description: str, is_completed: bool, deadline: datetime, category_id: UUID, user_id: UUID):
+    def execute(self, task_id: UUID, title:str, description: str, dificulties: str, solution: str, is_completed: bool, deadline: datetime, category_id: UUID, user_id: UUID):
         task = Task(
             id=task_id,
             title=title,
             description=description,
+            dificulties=dificulties,
+            solution=solution,
             is_completed=is_completed,
             is_deleted=False,
             deadline=deadline,

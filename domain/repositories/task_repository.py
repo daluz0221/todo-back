@@ -13,7 +13,7 @@ class TaskRepository(ABC):
     
     
     @abstractmethod
-    def get_by_id(self, task_id: UUID) -> Task:
+    def get_by_id(self, task_id: UUID, user_id: UUID) -> Task:
         pass
     
     
