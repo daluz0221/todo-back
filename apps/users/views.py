@@ -2,6 +2,9 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.permissions import AllowAny
+from rest_framework_simplejwt.views import TokenRefreshView
+from rest_framework_simplejwt.tokens import RefreshToken, TokenError
+from .serializers import CustomTokenRefreshSerializer
 
 
 
@@ -35,7 +38,29 @@ class LoginApiview(APIView):
         if serializer.is_valid():
             return Response(serializer.validated_data, status=status.HTTP_200_OK)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class LogoutApiView(APIView):
+
+    def post(self, request):
+        refresh_token = request.data.get("refresh")
+
+        if not refresh_token:
+            return Response({
+                "Detail": "No se proporcionó el token de refresco"
+            }, status=status.HTTP_400_BAD_REQUEST)
     
+        try:
+            token = RefreshToken(refresh_token)
+            token.blacklist()
+            return Response({
+                "Detail": "Sesión cerrada correctamente"
+            }, status=status.HTTP_205_RESET_CONTENT)
+        except TokenError as e:
+            return Response({"detail": str(e)},
+                            status=status.HTTP_400_BAD_REQUEST)
+        
+
+class CustomTokenRefreshView(TokenRefreshView):
+    permission_classes = [AllowAny]
     
-    
-# TODO: crear un middleware para todas las peticiones a las APIs que no sean de registro o login

@@ -42,6 +42,9 @@ INSTALLED_APPS = [
     'rest_framework',
     'apps.users',
     'apps.tasks',
+
+    'rest_framework_simplejwt',
+    'rest_framework_simplejwt.token_blacklist',
 ]
 
 MIDDLEWARE = [
@@ -55,6 +58,21 @@ MIDDLEWARE = [
 ]
 
 ROOT_URLCONF = 'todoBack.urls'
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'handlers': {
+        'console': {'class': 'logging.StreamHandler'},
+    },
+    'loggers': {
+        'rest_framework_simplejwt': {
+            'handlers': ['console'],
+            'level': 'DEBUG',
+            'propagate': True,
+        },
+    },
+}
+
 
 TEMPLATES = [
     {
@@ -144,9 +162,9 @@ AUTHENTICATION_BACKENDS = [
 ]
 
 SIMPLE_JWT = {
-    'ACCESS_TOKEN_LIFETIME': timedelta(hours=2),         # por ejemplo, 1 hora
-    'REFRESH_TOKEN_LIFETIME': timedelta(days=7),         # 7 días
-    'ROTATE_REFRESH_TOKENS': False,
-    'BLACKLIST_AFTER_ROTATION': False,
+    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=5),         # por ejemplo, 1 hora
+    'REFRESH_TOKEN_LIFETIME': timedelta(days=1),         # 7 días
+    'ROTATE_REFRESH_TOKENS': True,
+    'BLACKLIST_AFTER_ROTATION': True,
     'AUTH_HEADER_TYPES': ('Bearer',),
 }
