@@ -14,7 +14,12 @@ class TaskAdmin(admin.ModelAdmin):
     list_filter = ('is_completed', 'is_deleted', 'category', 'user')
     ordering = ('-deadline',)
     
-
+@admin.register(Subtask)
+class SubtaskAdmin(admin.ModelAdmin):
+    list_display = ('id', 'title', 'task', 'user', 'is_completed')
+    search_fields = ('title', 'task__title', 'user__username')
+    list_filter = ('is_completed', 'task', 'user')
+    ordering = ('-task__deadline',)
     
 
 # Register your models here.
