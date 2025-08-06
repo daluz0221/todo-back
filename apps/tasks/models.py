@@ -8,7 +8,7 @@ from django.contrib.auth import get_user_model
 User = get_user_model()
 
 class Category(models.Model):
-    id = models.UUIDField(primary_key=True, default=uuid.UUID, editable=False)
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='categories')
     name = models.CharField(max_length=255)
     is_deleted = models.BooleanField(default=False)
@@ -32,7 +32,7 @@ class Category(models.Model):
         
         
 class Task(models.Model):
-    id = models.UUIDField(primary_key=True, default=uuid.UUID, editable=False)
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     category = models.ForeignKey(Category, on_delete=models.CASCADE, related_name='tasks')
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='user_tasks')
     title = models.CharField(max_length=255)
@@ -60,7 +60,7 @@ class Task(models.Model):
     
     
 class Subtask(models.Model):
-    id = models.UUIDField(primary_key=True, default=uuid.UUID, editable=False)
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     task = models.ForeignKey(Task, on_delete=models.CASCADE, related_name='subtasks')
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='user_subtasks')
     title = models.CharField(max_length=255)
