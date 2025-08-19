@@ -93,9 +93,6 @@ class UpdateTaskApiView(APIView):
         
         serializer = TaskUpdateSerializer(data=request.data)
         if not serializer.is_valid():
-            print("============================")
-            print("llego")
-            print("============================")
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         
         

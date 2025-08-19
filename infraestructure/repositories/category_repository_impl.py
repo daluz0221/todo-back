@@ -16,13 +16,13 @@ class DjangoCategoryRepository(CategoryRepository):
     
     
     def get_by_id(self, category_id, user_id):
-        
+      
         try:
             # category = CategoryORM.objects.get(id=category_id, user_id=user_id)
             category = CategoryORM.objects.prefetch_related(
                 Prefetch(
                     'tasks',
-                    queryset=TaskORM.objects.filter(category_id=category_id, user_id=user_id, is_deleted=False),
+                    queryset=TaskORM.objects.filter(user_id=user_id, is_deleted=False),
                     to_attr="category_tasks"
                 )
             ).get(id=category_id, user_id=user_id)

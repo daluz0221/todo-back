@@ -1,3 +1,4 @@
+from typing import Optional
 from dataclasses import dataclass, field
 from datetime import datetime
 from uuid import UUID, uuid4
@@ -5,12 +6,12 @@ from uuid import UUID, uuid4
 @dataclass
 class Task:
     title: str
-    description: str
-    is_completed: bool
-    is_deleted: bool
-    dificulties: str
-    solution: str
-    deadline: datetime
+    description: Optional[str] = None
+    is_completed: bool = False
+    is_deleted: bool = False
+    dificulties: Optional[str] = None
+    solution: Optional[str] = None
+    deadline: Optional[datetime] = None
     id: UUID = field(default_factory=uuid4)
     category_id: UUID = field(default_factory=uuid4)
     user_id: UUID = field(default_factory=uuid4)
