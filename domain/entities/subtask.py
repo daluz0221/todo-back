@@ -1,14 +1,15 @@
+from typing import Optional
 from dataclasses import dataclass, field
 from uuid import UUID, uuid4
 
 @dataclass
 class Subtask:
     title: str
-    description: str
-    is_completed: bool
-    dificulties: str
-    solution: str
-    is_deleted: bool
+    description: Optional[str] = None
+    is_completed: bool = False
+    dificulties: Optional[str] = None
+    solution: Optional[str] = None
+    is_deleted: bool = False
     id: UUID = field(default_factory=uuid4)
     task_id: UUID = field(default_factory=uuid4)
     user_id: UUID = field(default_factory=uuid4)

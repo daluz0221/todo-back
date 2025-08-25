@@ -20,7 +20,7 @@ class DjangoTaskRepository(TaskRepository):
             task = TaskORM.objects.prefetch_related(
                 Prefetch(
                     'subtasks',
-                    queryset=SubtasORM.objects.filter(task_id=task_id, user_id=user_id, is_deleted=False),
+                    queryset=SubtasORM.objects.filter(user_id=user_id, is_deleted=False),
                     to_attr='task_subtasks'
                 )
             ).get(id=task_id, user_id=user_id)
